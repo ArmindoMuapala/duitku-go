@@ -224,7 +224,7 @@ Contributions are welcome! Here's how you can help:
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
 
-Please make sure your code passes all tests and follows the Go coding standards.
+Please make sure your code passes all tests and only use Go's standard library.
 
 ## 📄 License
 
