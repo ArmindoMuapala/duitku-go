@@ -67,7 +67,7 @@ func TestCreateTransaction(t *testing.T) {
 			"reference": "DEV123456789",
 			"paymentUrl": "https://sandbox.duitku.com/payment/DEV123456789",
 			"vaNumber": "123456789",
-			"amount": 40000,
+			"amount": "40000",
 			"statusCode": "00",
 			"statusMessage": "SUCCESS"
 		}`))
@@ -116,8 +116,8 @@ func TestCreateTransaction(t *testing.T) {
 	if response.VANumber != "123456789" {
 		t.Errorf("Response VANumber = %s, want 123456789", response.VANumber)
 	}
-	if response.Amount != 40000 {
-		t.Errorf("Response Amount = %d, want 40000", response.Amount)
+	if response.Amount != "40000" {
+		t.Errorf("Response Amount = %s, want 40000", response.Amount)
 	}
 	if response.StatusCode != "00" {
 		t.Errorf("Response StatusCode = %s, want 00", response.StatusCode)
@@ -211,8 +211,8 @@ func TestCheckTransaction(t *testing.T) {
 		w.Write([]byte(`{
 			"merchantOrderId": "ORDER123",
 			"reference": "DEV123456789",
-			"amount": 40000,
-			"fee": 2000,
+			"amount": "40000",
+			"fee": "2000",
 			"statusCode": "00",
 			"statusMessage": "SUCCESS"
 		}`))
@@ -242,11 +242,11 @@ func TestCheckTransaction(t *testing.T) {
 	if response.Reference != "DEV123456789" {
 		t.Errorf("Response Reference = %s, want DEV123456789", response.Reference)
 	}
-	if response.Amount != 40000 {
-		t.Errorf("Response Amount = %d, want 40000", response.Amount)
+	if response.Amount != "40000" {
+		t.Errorf("Response Amount = %s, want 40000", response.Amount)
 	}
-	if response.Fee != 2000 {
-		t.Errorf("Response Fee = %d, want 2000", response.Fee)
+	if response.Fee != "2000" {
+		t.Errorf("Response Fee = %s, want 2000", response.Fee)
 	}
 	if response.StatusCode != "00" {
 		t.Errorf("Response StatusCode = %s, want 00", response.StatusCode)

@@ -6,14 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
 // CallbackData represents the data received in a Duitku callback
 type CallbackData struct {
 	MerchantCode    string `json:"merchantCode"`
-	Amount          int    `json:"amount"`
+	Amount          string `json:"amount"`
 	MerchantOrderID string `json:"merchantOrderId"`
 	ProductDetail   string `json:"productDetail"`
 	AdditionalParam string `json:"additionalParam"`
@@ -45,16 +44,10 @@ func (c *Client) ParseCallback(r *http.Request) (*CallbackData, error) {
 		return nil, errors.New("missing required callback parameters")
 	}
 
-	// Parse amount
-	amount, err := strconv.Atoi(amountStr)
-	if err != nil {
-		return nil, fmt.Errorf("invalid amount: %w", err)
-	}
-
 	// Create callback data
 	callbackData := &CallbackData{
 		MerchantCode:    merchantCode,
-		Amount:          amount,
+		Amount:          amountStr,
 		MerchantOrderID: merchantOrderID,
 		ProductDetail:   productDetail,
 		AdditionalParam: additionalParam,
@@ -75,7 +68,7 @@ func (c *Client) ParseCallback(r *http.Request) (*CallbackData, error) {
 // VerifyCallbackSignature verifies the signature of a callback
 func (c *Client) VerifyCallbackSignature(data *CallbackData) bool {
 	// Create signature string
-	signatureStr := fmt.Sprintf("%s%d%s%s", 
+	signatureStr := fmt.Sprintf("%s%s%s%s", 
 		data.MerchantCode, 
 		data.Amount, 
 		data.MerchantOrderID, 
@@ -86,7 +79,7 @@ func (c *Client) VerifyCallbackSignature(data *CallbackData) bool {
 	hash := md5.Sum([]byte(signatureStr))
 	expectedSignature := hex.EncodeToString(hash[:])
 
-	// Compare signatures (case-insensitive)
+	// Compare signatures
 	return strings.EqualFold(expectedSignature, data.Signature)
 }
 

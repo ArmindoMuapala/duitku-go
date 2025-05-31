@@ -20,7 +20,7 @@ func TestParseCallback(t *testing.T) {
 	})
 
 	// Calculate the actual expected signature
-	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	signatureStr := fmt.Sprintf("%s%s%s%s", "DXXXX", "40000", "ORDER123", "DXXXXCX80TZJ85Q70QCI")
 	hash := md5.Sum([]byte(signatureStr))
 	expectedSignature := hex.EncodeToString(hash[:])
 
@@ -53,8 +53,8 @@ func TestParseCallback(t *testing.T) {
 	if callbackData.MerchantCode != "DXXXX" {
 		t.Errorf("CallbackData MerchantCode = %s, want DXXXX", callbackData.MerchantCode)
 	}
-	if callbackData.Amount != 40000 {
-		t.Errorf("CallbackData Amount = %d, want 40000", callbackData.Amount)
+	if callbackData.Amount != "40000" {
+		t.Errorf("CallbackData Amount = %s, want 40000", callbackData.Amount)
 	}
 	if callbackData.MerchantOrderID != "ORDER123" {
 		t.Errorf("CallbackData MerchantOrderID = %s, want ORDER123", callbackData.MerchantOrderID)
@@ -114,14 +114,14 @@ func TestVerifyCallbackSignature(t *testing.T) {
 	})
 
 	// Calculate the actual expected signature
-	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	signatureStr := fmt.Sprintf("%s%s%s%s", "DXXXX", "40000", "ORDER123", "DXXXXCX80TZJ85Q70QCI")
 	hash := md5.Sum([]byte(signatureStr))
 	expectedSignature := hex.EncodeToString(hash[:])
 
 	// Create a valid callback data
 	callbackData := &CallbackData{
 		MerchantCode:    "DXXXX",
-		Amount:          40000,
+		Amount:          "40000",
 		MerchantOrderID: "ORDER123",
 		ResultCode:      "00",
 		Signature:       expectedSignature, // Valid signature
@@ -135,7 +135,7 @@ func TestVerifyCallbackSignature(t *testing.T) {
 	// Create an invalid callback data
 	invalidCallbackData := &CallbackData{
 		MerchantCode:    "DXXXX",
-		Amount:          40000,
+		Amount:          "40000",
 		MerchantOrderID: "ORDER123",
 		ResultCode:      "00",
 		Signature:       "invalid", // Invalid signature
@@ -178,7 +178,7 @@ func TestHandleCallback(t *testing.T) {
 	})
 
 	// Calculate the actual expected signature
-	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	signatureStr := fmt.Sprintf("%s%s%s%s", "DXXXX", "40000", "ORDER123", "DXXXXCX80TZJ85Q70QCI")
 	hash := md5.Sum([]byte(signatureStr))
 	expectedSignature := hex.EncodeToString(hash[:])
 

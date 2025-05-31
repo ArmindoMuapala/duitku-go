@@ -13,9 +13,9 @@ import (
 
 func main() {
 	// Get merchant code and API key from environment variables
-	merchantCode := os.Getenv("DUITKU_MERCHANT_CODE")
-	apiKey := os.Getenv("DUITKU_API_KEY")
-	
+	merchantCode := "DS12809"
+	apiKey := "fc24149a270c5580b89f54ff03c0646a"
+
 	if merchantCode == "" || apiKey == "" {
 		log.Fatal("DUITKU_MERCHANT_CODE and DUITKU_API_KEY environment variables must be set")
 	}
@@ -45,7 +45,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	
+
 	log.Printf("Server listening on port %s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
@@ -146,7 +146,7 @@ func paymentHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clien
 		CallbackURL:     fmt.Sprintf("%s/callback", getBaseURL(r)),
 		ReturnURL:       fmt.Sprintf("%s/return?order_id=%s", getBaseURL(r), merchantOrderID),
 		ExpiryPeriod:    60, // 60 minutes
-		
+
 		// Add customer details
 		CustomerDetail: &duitku.CustomerDetail{
 			FirstName:   name,
@@ -154,7 +154,7 @@ func paymentHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clien
 			Email:       email,
 			PhoneNumber: "08123456789",
 		},
-		
+
 		// Add item details
 		ItemDetails: []duitku.ItemDetail{
 			{
@@ -184,7 +184,7 @@ func paymentHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clien
 func callbackHandler(w http.ResponseWriter, r *http.Request, client *duitku.Client) {
 	client.HandleCallback(w, r, func(data *duitku.CallbackData) error {
 		// Log callback data
-		log.Printf("Received callback: OrderID=%s, Amount=%d, Status=%s", 
+		log.Printf("Received callback: OrderID=%s, Amount=%d, Status=%s",
 			data.MerchantOrderID, data.Amount, data.ResultCode)
 
 		// Check if payment is successful
@@ -194,7 +194,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clie
 			log.Printf("Payment successful for order %s", data.MerchantOrderID)
 		} else {
 			// Handle failed payment
-			log.Printf("Payment failed for order %s with code %s", 
+			log.Printf("Payment failed for order %s with code %s",
 				data.MerchantOrderID, data.ResultCode)
 		}
 
@@ -205,7 +205,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clie
 // returnHandler handles the user return from the payment page
 func returnHandler(w http.ResponseWriter, r *http.Request) {
 	orderID := r.URL.Query().Get("order_id")
-	
+
 	html := fmt.Sprintf(`
 	<!DOCTYPE html>
 	<html>
@@ -230,7 +230,7 @@ func returnHandler(w http.ResponseWriter, r *http.Request) {
 	</body>
 	</html>
 	`, orderID, orderID, orderID)
-	
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(html))
 }
@@ -272,20 +272,20 @@ func checkStatusHandler(w http.ResponseWriter, r *http.Request, client *duitku.C
 			<h2>Order Details</h2>
 			<p>Order ID: %s</p>
 			<p>Reference: %s</p>
-			<p>Amount: Rp %d</p>
+			<p>Amount: Rp %s</p>
 			<p>Status: <span class="status %s">%s (%s)</span></p>
 		</div>
 		<p><a href="/">Back to Home</a></p>
 	</body>
 	</html>
-	`, 
-	status.MerchantOrderID, 
-	status.Reference, 
-	status.Amount,
-	getStatusClass(status.StatusCode),
-	status.StatusMessage,
-	status.StatusCode)
-	
+	`,
+		status.MerchantOrderID,
+		status.Reference,
+		status.Amount,
+		getStatusClass(status.StatusCode),
+		status.StatusMessage,
+		status.StatusCode)
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(html))
 }

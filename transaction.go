@@ -18,23 +18,23 @@ type TransactionRequest struct {
 	ExpiryPeriod    int    `json:"expiryPeriod"`
 
 	// Optional fields
-	PhoneNumber      string            `json:"phoneNumber,omitempty"`
-	AdditionalParam  string            `json:"additionalParam,omitempty"`
-	MerchantUserInfo string            `json:"merchantUserInfo,omitempty"`
-	CustomerDetail   *CustomerDetail   `json:"customerDetail,omitempty"`
-	ItemDetails      []ItemDetail      `json:"itemDetails,omitempty"`
-	AccountLink      *AccountLink      `json:"accountLink,omitempty"`
-	CreditCardDetail *CreditCardDetail `json:"creditCardDetail,omitempty"`
-	IsSubscription   *bool             `json:"isSubscription,omitempty"`
+	PhoneNumber        string              `json:"phoneNumber,omitempty"`
+	AdditionalParam    string              `json:"additionalParam,omitempty"`
+	MerchantUserInfo   string              `json:"merchantUserInfo,omitempty"`
+	CustomerDetail     *CustomerDetail     `json:"customerDetail,omitempty"`
+	ItemDetails        []ItemDetail        `json:"itemDetails,omitempty"`
+	AccountLink        *AccountLink        `json:"accountLink,omitempty"`
+	CreditCardDetail   *CreditCardDetail   `json:"creditCardDetail,omitempty"`
+	IsSubscription     *bool               `json:"isSubscription,omitempty"`
 	SubscriptionDetail *SubscriptionDetail `json:"subscriptionDetail,omitempty"`
 }
 
 // CustomerDetail represents customer details for a transaction
 type CustomerDetail struct {
-	FirstName       string  `json:"firstName"`
-	LastName        string  `json:"lastName"`
-	Email           string  `json:"email"`
-	PhoneNumber     string  `json:"phoneNumber,omitempty"`
+	FirstName       string   `json:"firstName"`
+	LastName        string   `json:"lastName"`
+	Email           string   `json:"email"`
+	PhoneNumber     string   `json:"phoneNumber,omitempty"`
 	BillingAddress  *Address `json:"billingAddress,omitempty"`
 	ShippingAddress *Address `json:"shippingAddress,omitempty"`
 }
@@ -59,8 +59,8 @@ type ItemDetail struct {
 
 // AccountLink represents account linking details for OVO and Shopee
 type AccountLink struct {
-	CredentialCode string       `json:"credentialCode"`
-	OVO            *OVODetail   `json:"ovo,omitempty"`
+	CredentialCode string        `json:"credentialCode"`
+	OVO            *OVODetail    `json:"ovo,omitempty"`
 	Shopee         *ShopeeDetail `json:"shopee,omitempty"`
 }
 
@@ -98,13 +98,13 @@ type SubscriptionDetail struct {
 
 // TransactionResponse represents the response from creating a transaction
 type TransactionResponse struct {
-	MerchantCode   string `json:"merchantCode"`
-	Reference      string `json:"reference"`
-	PaymentURL     string `json:"paymentUrl"`
-	VANumber       string `json:"vaNumber,omitempty"`
-	Amount         int    `json:"amount"`
-	StatusCode     string `json:"statusCode"`
-	StatusMessage  string `json:"statusMessage"`
+	MerchantCode  string `json:"merchantCode"`
+	Reference     string `json:"reference"`
+	PaymentURL    string `json:"paymentUrl"`
+	VANumber      string `json:"vaNumber,omitempty"`
+	Amount        string `json:"amount"`
+	StatusCode    string `json:"statusCode"`
+	StatusMessage string `json:"statusMessage"`
 }
 
 // CreateTransaction creates a new transaction
@@ -147,8 +147,8 @@ type CheckTransactionRequest struct {
 type TransactionStatusResponse struct {
 	MerchantOrderID string `json:"merchantOrderId"`
 	Reference       string `json:"reference"`
-	Amount          int    `json:"amount"`
-	Fee             int    `json:"fee"`
+	Amount          string `json:"amount"`
+	Fee             string `json:"fee"`
 	StatusCode      string `json:"statusCode"`
 	StatusMessage   string `json:"statusMessage"`
 }
