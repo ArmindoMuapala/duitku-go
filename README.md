@@ -7,6 +7,23 @@
 
 A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built with only Go's standard library. No external dependencies, making it ideal for minimal and secure payment gateway integrations. This package implements [Duitku API v2](https://docs.duitku.com/api/en/#introduction).
 
+## Table of Contents
+- [🌟 Overview](#-overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [✨ Features](#-features)
+  - [Payment Methods 💳](#payment-methods-)
+  - [Transactions 🛒](#transactions-)
+  - [Callbacks 📡](#callbacks-)
+  - [Additional Features 🔧](#additional-features-)
+  - [Payment Methods Supported 💰](#payment-methods-supported-)
+- [🚀 Advanced Usage](#-advanced-usage)
+  - [Subscription Payments](#subscription-payments)
+- [📋 Requirements](#-requirements)
+- [🧪 Example Application](#-example-application)
+- [👥 Contributing](#-contributing)
+- [📄 License](#-license)
+
 ## 🌟 Overview
 
 Duitku is a payment gateway service that provides various payment methods for Indonesian merchants. This Go package provides a clean, idiomatic interface to integrate with Duitku's payment services.
