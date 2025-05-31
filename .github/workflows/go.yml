@@ -1,0 +1,66 @@
+name: Go
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test on Go ${{ matrix.go-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.20', '1.21', '1.22', '1.23', '1.24']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+        check-latest: true
+
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Test
+      run: go test -v ./...
+
+    - name: Vet
+      run: go vet ./...
+
+    - name: Staticcheck
+      uses: dominikh/staticcheck-action@v1.3.0
+      with:
+        version: "latest"
+        install-go: false
+
+  coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+        check-latest: true
+
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Generate coverage report
+      run: go test -coverprofile=coverage.out -covermode=atomic ./...
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.out
+        flags: unittests
