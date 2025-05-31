@@ -1,6 +1,9 @@
 package duitku
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -16,9 +19,10 @@ func TestParseCallback(t *testing.T) {
 		IsSandbox:    true,
 	})
 
-	// Create a valid signature
-	signatureStr := "DXXXX40000ORDER123DXXXXCX80TZJ85Q70QCI"
-	expectedSignature := "d5df5a9d6807a8d7fae5b76e14c6bf4a"
+	// Calculate the actual expected signature
+	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	hash := md5.Sum([]byte(signatureStr))
+	expectedSignature := hex.EncodeToString(hash[:])
 
 	// Create form data
 	form := url.Values{}
@@ -109,13 +113,18 @@ func TestVerifyCallbackSignature(t *testing.T) {
 		IsSandbox:    true,
 	})
 
+	// Calculate the actual expected signature
+	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	hash := md5.Sum([]byte(signatureStr))
+	expectedSignature := hex.EncodeToString(hash[:])
+
 	// Create a valid callback data
 	callbackData := &CallbackData{
 		MerchantCode:    "DXXXX",
 		Amount:          40000,
 		MerchantOrderID: "ORDER123",
 		ResultCode:      "00",
-		Signature:       "d5df5a9d6807a8d7fae5b76e14c6bf4a", // Valid signature
+		Signature:       expectedSignature, // Valid signature
 	}
 
 	// Verify signature
@@ -168,9 +177,10 @@ func TestHandleCallback(t *testing.T) {
 		IsSandbox:    true,
 	})
 
-	// Create a valid signature
-	signatureStr := "DXXXX40000ORDER123DXXXXCX80TZJ85Q70QCI"
-	expectedSignature := "d5df5a9d6807a8d7fae5b76e14c6bf4a"
+	// Calculate the actual expected signature
+	signatureStr := fmt.Sprintf("%s%d%s%s", "DXXXX", 40000, "ORDER123", "DXXXXCX80TZJ85Q70QCI")
+	hash := md5.Sum([]byte(signatureStr))
+	expectedSignature := hex.EncodeToString(hash[:])
 
 	// Create form data
 	form := url.Values{}
