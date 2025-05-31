@@ -7,6 +7,8 @@
 
 A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built with only Go's standard library. No external dependencies, making it ideal for minimal and secure payment gateway integrations. This package implements [Duitku API v2](https://docs.duitku.com/api/en/#introduction).
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## Table of Contents
 - [🌟 Overview](#-overview)
 - [Installation](#installation)
@@ -30,11 +32,15 @@ Duitku is a payment gateway service that provides various payment methods for In
 
 > **⚠️ NOTE: This package is currently under development and NOT ready for production use.**
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## Installation
 
 ```bash
 go get github.com/fatkulnurk/duitku-go
 ```
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ## Usage
 
@@ -97,6 +103,8 @@ func main() {
 }
 ```
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## ✨ Features
 
 ### Payment Methods 💳
@@ -105,6 +113,8 @@ func main() {
   - Retrieve all available payment methods based on transaction amount
   - Supports all payment methods including VA, e-wallets, QRIS, retail outlets, and more
   - Automatically filters methods based on minimum transaction amount
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ### Transactions 🛒
 
@@ -118,12 +128,16 @@ func main() {
   - Verify payment status using merchant order ID
   - Get detailed transaction information including amount and reference
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ### Callbacks 📡
 
 - ✅ **Handle Payment Notifications** - [API Reference](https://docs.duitku.com/api/en/#callback)
   - Secure callback handling with signature verification
   - Automatic parsing of callback data
   - Easy-to-use handler function for processing successful payments
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ### Additional Features 🔧
 
@@ -138,6 +152,8 @@ func main() {
 - ✅ **Comprehensive Testing**
   - Full test suite with high coverage
   - CI/CD integration with GitHub Actions
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ### Payment Methods Supported 💰
 
@@ -164,6 +180,8 @@ func main() {
 | **Paylater** | Akulaku | AK | ✅ |
 | | Kredivo | K1 | ✅ |
 | | Atome | AT | ✅ |
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ## 🚀 Advanced Usage
 
@@ -202,10 +220,14 @@ transaction := duitku.TransactionRequest{
 }
 ```
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## 📋 Requirements
 
 - Go 1.20 or higher
 - Duitku merchant account and API credentials
+
+[🔼 Jump to Table of Contents](#table-of-contents)
 
 ## 🧪 Example Application
 
@@ -230,6 +252,8 @@ go run main.go
 
 Then open your browser to http://localhost:8080 to see the example application in action.
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## 👥 Contributing
 
 Contributions are welcome! Here's how you can help:
@@ -243,6 +267,10 @@ Contributions are welcome! Here's how you can help:
 
 Please make sure your code passes all tests and only use Go's standard library.
 
+[🔼 Jump to Table of Contents](#table-of-contents)
+
 ## 📄 License
 
 MIT License - See [LICENSE](LICENSE) for details.
+
+[🔼 Jump to Table of Contents](#table-of-contents)
