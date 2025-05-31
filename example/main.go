@@ -13,8 +13,8 @@ import (
 
 func main() {
 	// Get merchant code and API key from environment variables
-	merchantCode := "DS12809"
-	apiKey := "fc24149a270c5580b89f54ff03c0646a"
+	merchantCode := os.Getenv("DUITKU_MERCHANT_CODE")
+	apiKey := os.Getenv("DUITKU_API_KEY")
 
 	if merchantCode == "" || apiKey == "" {
 		log.Fatal("DUITKU_MERCHANT_CODE and DUITKU_API_KEY environment variables must be set")
