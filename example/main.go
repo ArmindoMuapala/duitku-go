@@ -184,7 +184,7 @@ func paymentHandler(w http.ResponseWriter, r *http.Request, client *duitku.Clien
 func callbackHandler(w http.ResponseWriter, r *http.Request, client *duitku.Client) {
 	client.HandleCallback(w, r, func(data *duitku.CallbackData) error {
 		// Log callback data
-		log.Printf("Received callback: OrderID=%s, Amount=%d, Status=%s",
+		log.Printf("Received callback: OrderID=%s, Amount=%s, Status=%s",
 			data.MerchantOrderID, data.Amount, data.ResultCode)
 
 		// Check if payment is successful
