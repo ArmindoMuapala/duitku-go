@@ -22,9 +22,10 @@ func main() {
 
 	// Initialize Duitku client
 	client := duitku.NewClient(duitku.Config{
-		MerchantCode: merchantCode,
-		APIKey:       apiKey,
-		IsSandbox:    true, // Use sandbox environment for testing
+		MerchantCode:               merchantCode,
+		APIKey:                     apiKey,
+		IsSandbox:                  true, // Use sandbox environment for testing
+		LogEveryRequestAndResponse: true,
 	})
 
 	// Set up HTTP server to handle routes
@@ -75,17 +76,60 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 			<div class="form-group">
 				<label for="payment_method">Payment Method</label>
 				<select id="payment_method" name="payment_method" required>
-					<option value="BC">BCA Virtual Account</option>
-					<option value="M1">Mandiri Virtual Account</option>
-					<option value="BT">Permata Virtual Account</option>
-					<option value="I1">BNI Virtual Account</option>
-					<option value="BR">BRI Virtual Account</option>
-					<option value="OV">OVO</option>
-					<option value="SP">ShopeePay</option>
-					<option value="LA">LinkAja</option>
-					<option value="DA">DANA</option>
-					<option value="QR">QRIS</option>
-					<option value="VC">Credit Card</option>
+					<!-- Credit Card -->
+					<optgroup label="Credit Card">
+						<option value="VC">Credit Card (Visa / Master Card / JCB)</option>
+					</optgroup>
+					
+					<!-- Virtual Account -->
+					<optgroup label="Virtual Account">
+						<option value="BC">BCA Virtual Account</option>
+						<option value="M2">Mandiri Virtual Account</option>
+						<option value="VA">Maybank Virtual Account</option>
+						<option value="I1">BNI Virtual Account</option>
+						<option value="B1">CIMB Niaga Virtual Account</option>
+						<option value="BT">Permata Bank Virtual Account</option>
+						<option value="A1">ATM Bersama</option>
+						<option value="AG">Bank Artha Graha</option>
+						<option value="NC">Bank Neo Commerce/BNC</option>
+						<option value="BR">BRIVA</option>
+						<option value="S1">Bank Sahabat Sampoerna</option>
+						<option value="DM">Danamon Virtual Account</option>
+						<option value="BV">BSI Virtual Account</option>
+					</optgroup>
+					
+					<!-- Ritel -->
+					<optgroup label="Retail Outlets">
+						<option value="FT">Pegadaian/ALFA/Pos</option>
+						<option value="IR">Indomaret</option>
+					</optgroup>
+					
+					<!-- E-Wallet -->
+					<optgroup label="E-Wallet">
+						<option value="OV">OVO (Support Void)</option>
+						<option value="SA">Shopee Pay Apps (Support Void)</option>
+						<option value="LF">LinkAja Apps (Fixed Fee)</option>
+						<option value="LA">LinkAja Apps (Percentage Fee)</option>
+						<option value="DA">DANA</option>
+						<option value="SL">Shopee Pay Account Link</option>
+						<option value="OL">OVO Account Link</option>
+						<option value="JP">Jenius Pay</option>
+					</optgroup>
+					
+					<!-- QRIS -->
+					<optgroup label="QRIS">
+						<option value="SP">QRIS ShopeePay</option>
+						<option value="NQ">QRIS Nobu</option>
+						<option value="DQ">QRIS Dana</option>
+						<option value="GQ">QRIS Gudang Voucher</option>
+						<option value="SQ">QRIS Nusapay</option>
+					</optgroup>
+					
+					<!-- Kredit -->
+					<optgroup label="Paylater/Credit">
+						<option value="DN">Indodana Paylater</option>
+						<option value="AT">ATOME</option>
+					</optgroup>
 				</select>
 			</div>
 			<div class="form-group">
