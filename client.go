@@ -8,7 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -29,13 +31,19 @@ type Config struct {
 	IsSandbox bool
 	// HTTPClient is an optional custom HTTP client
 	HTTPClient *http.Client
+	// Logger is an optional custom logger
+	Logger *log.Logger
+	// Log every request and response
+	LogEveryRequestAndResponse bool
 }
 
 // Client is the Duitku API client
 type Client struct {
-	config     Config
-	baseURL    string
-	httpClient *http.Client
+	config                     Config
+	baseURL                    string
+	httpClient                 *http.Client
+	logger                     *log.Logger
+	logEveryRequestAndResponse bool
 }
 
 // NewClient creates a new Duitku client with the provided configuration
@@ -52,10 +60,17 @@ func NewClient(config Config) *Client {
 		}
 	}
 
+	logger := config.Logger
+	if logger == nil {
+		logger = log.New(os.Stdout, "github.com/fatkulnurk/duitku-go: ", log.LstdFlags)
+	}
+
 	return &Client{
-		config:     config,
-		baseURL:    baseURL,
-		httpClient: httpClient,
+		config:                     config,
+		baseURL:                    baseURL,
+		httpClient:                 httpClient,
+		logger:                     logger,
+		logEveryRequestAndResponse: config.LogEveryRequestAndResponse,
 	}
 }
 
@@ -107,6 +122,29 @@ func (c *Client) doRequest(method, endpoint string, body interface{}, result int
 	if err != nil {
 		return fmt.Errorf("error making request: %w", err)
 	}
+
+	if c.logEveryRequestAndResponse {
+		c.logger.Println("-=-=-=-= [client.go][doRequest] -=-=-=-=")
+		c.logger.Printf("Request method: %s \n", method)
+		c.logger.Printf("Request url: %s \n", url)
+		c.logger.Printf("Request body: %+v \n", body)
+		c.logger.Printf("Response status code: %d \n", resp.StatusCode)
+		c.logger.Printf("Response status: %s \n", resp.Status)
+
+		// Read the response body
+		respBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			c.logger.Printf("Error reading response body: %v\n", err)
+		} else {
+			c.logger.Printf("Response body: %s\n", string(respBody))
+		}
+
+		// Create a new reader with the same data for further processing
+		resp.Body = io.NopCloser(bytes.NewBuffer(respBody))
+
+		c.logger.Println("-=-=-=-= [client.go][doRequest] -=-=-=-=")
+	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
