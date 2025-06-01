@@ -50,11 +50,21 @@ const (
 
 // Transaction status codes
 const (
-	StatusSuccess   = "00" // Success
-	StatusPending   = "01" // Pending
-	StatusFailed    = "02" // Failed
-	StatusCancelled = "03" // Cancelled
-	StatusExpired   = "04" // Expired
+	StatusSuccess = "00" // Success
+	StatusPending = "01" // Pending
+)
+
+// Callback status codes
+const (
+	CallbackStatusSuccess = "00"
+	CallbackStatusFailed  = "01"
+)
+
+// Check Transaction status codes
+const (
+	CheckTransactionStatusSuccess   = "00"
+	CheckTransactionStatusPending   = "01"
+	CheckTransactionStatusCancelled = "02"
 )
 
 // Subscription frequency types
