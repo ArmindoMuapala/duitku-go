@@ -97,11 +97,25 @@ type SubscriptionDetail struct {
 }
 
 // TransactionResponse represents the response from creating a transaction
+// url: https://docs.duitku.com/api/en/#response-parameters
+// example response:
+//
+//	{
+//	 "merchantCode": "DXXXX",
+//	 "reference": "DXXXXCX80TZJ85Q70QCI",
+//	 "paymentUrl": "https://sandbox.duitku.com/topup/topupdirectv2.aspx?ref=BCA7WZ7EIDXXXXWEC",
+//	 "vaNumber": "7007014001444348",
+//	 "qrString": "00020101021226660014ID.DANA.WWW011893600911002151500102152006170915150010303UME51450015ID.OR.GPNQR.WWW02150000000000000000303UME520454995802ID5911Toko Jualan6013Jakarta Barat61051153062210117LQKI2LPMJQPKCIIS553033605405400006304502A",
+//	 "amount": "40000",
+//	 "statusCode": "00",
+//	 "statusMessage": "SUCCESS"
+//	}
 type TransactionResponse struct {
 	MerchantCode  string `json:"merchantCode"`
 	Reference     string `json:"reference"`
-	PaymentURL    string `json:"paymentUrl"`
+	PaymentURL    string `json:"paymentUrl,omitempty"`
 	VANumber      string `json:"vaNumber,omitempty"`
+	QrString      string `json:"qrString,omitempty"`
 	Amount        string `json:"amount"`
 	StatusCode    string `json:"statusCode"`
 	StatusMessage string `json:"statusMessage"`
