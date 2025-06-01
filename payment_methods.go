@@ -14,6 +14,27 @@ type PaymentMethod struct {
 }
 
 // PaymentMethodResponse represents the response from the get payment methods endpoint
+// url: https://docs.duitku.com/api/en/#response-parameter
+// example response:
+//
+//	{
+//	   "paymentFee": [
+//	       {
+//	           "paymentMethod": "VA",
+//	           "paymentName": "MAYBANK VA",
+//	           "paymentImage": "https://images.duitku.com/hotlink-ok/VA.PNG",
+//	           "totalFee": "0"
+//	       },
+//	       {
+//	           "paymentMethod": "BT",
+//	           "paymentName": "PERMATA VA",
+//	           "paymentImage": "https://images.duitku.com/hotlink-ok/PERMATA.PNG",
+//	           "totalFee": "0"
+//	       },
+//	   ],
+//	   "responseCode": "00",
+//	   "responseMessage": "SUCCESS"
+//	}
 type PaymentMethodResponse struct {
 	PaymentFee      []PaymentMethod `json:"paymentFee"`
 	ResponseCode    string          `json:"responseCode"`
@@ -29,6 +50,7 @@ type GetPaymentMethodsRequest struct {
 }
 
 // GetPaymentMethods retrieves the available payment methods for the specified amount
+// url: https://docs.duitku.com/api/en/#get-payment-method
 func (c *Client) GetPaymentMethods(amount int) ([]PaymentMethod, error) {
 	datetime := time.Now().Format("2006-01-02 15:04:05")
 	signature := c.createSignatureSHA256(c.config.MerchantCode, fmt.Sprintf("%d", amount), datetime)
