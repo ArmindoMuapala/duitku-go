@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestGetPaymentMethods(t *testing.T) {
@@ -131,5 +133,100 @@ func TestGetPaymentMethodsError(t *testing.T) {
 	_, err := client.GetPaymentMethods(10000)
 	if err == nil {
 		t.Errorf("GetPaymentMethods() error = nil, want error")
+	}
+
+	// Error should contain the response message
+	expectedErrMsg := "error getting payment methods: ERROR"
+	if err.Error() != expectedErrMsg {
+		t.Errorf("Expected error message '%s', got '%s'", expectedErrMsg, err.Error())
+	}
+}
+
+func TestGetPaymentMethodsServerError(t *testing.T) {
+	// Create a test server that returns a 500 error
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"statusCode":"500","statusMessage":"Internal Server Error"}`)) // Error response
+	}))
+	defer server.Close()
+
+	// Create a client with the test server URL
+	client := NewClient(Config{
+		MerchantCode: "DXXXX",
+		APIKey:       "DXXXXCX80TZJ85Q70QCI",
+		IsSandbox:    true,
+	})
+	// Override the base URL to use the test server
+	client.baseURL = server.URL
+
+	// Test getting payment methods with server error
+	_, err := client.GetPaymentMethods(10000)
+
+	// Should return an error
+	if err == nil {
+		t.Errorf("GetPaymentMethods() expected error, got nil")
+	}
+
+	// We just need to verify that an error was returned, the exact message is not important
+	// as long as it's not nil, since the server returned an error status code
+}
+
+func TestGetPaymentMethodsInvalidJSON(t *testing.T) {
+	// Create a test server that returns invalid JSON
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{invalid json}`))
+	}))
+	defer server.Close()
+
+	// Create a client with the test server URL
+	client := NewClient(Config{
+		MerchantCode: "DXXXX",
+		APIKey:       "DXXXXCX80TZJ85Q70QCI",
+		IsSandbox:    true,
+	})
+	// Override the base URL to use the test server
+	client.baseURL = server.URL
+
+	// Test getting payment methods with invalid JSON response
+	_, err := client.GetPaymentMethods(10000)
+
+	// Should return an error
+	if err == nil {
+		t.Errorf("GetPaymentMethods() expected error, got nil")
+	}
+
+	// Error should be about JSON parsing or decoding
+	if !strings.Contains(err.Error(), "JSON") &&
+		!strings.Contains(err.Error(), "json") &&
+		!strings.Contains(err.Error(), "decoding") &&
+		!strings.Contains(err.Error(), "invalid character") {
+		t.Errorf("Expected error about JSON parsing or decoding, got: %v", err)
+	}
+}
+
+func TestGetPaymentMethodsWithNetworkError(t *testing.T) {
+	// Create a client with an invalid URL to simulate network error
+	client := &Client{
+		config: Config{
+			MerchantCode: "DXXXX",
+			APIKey:       "DXXXXCX80TZJ85Q70QCI",
+		},
+		baseURL:    "http://invalid-url-that-will-cause-error",
+		httpClient: &http.Client{Timeout: 1 * time.Second}, // Short timeout to fail quickly
+	}
+
+	// Test getting payment methods with network error
+	_, err := client.GetPaymentMethods(10000)
+
+	// Should return an error
+	if err == nil {
+		t.Errorf("GetPaymentMethods() expected error for network failure, got nil")
+	}
+
+	// Error should mention request or connection
+	if !strings.Contains(err.Error(), "request") && !strings.Contains(err.Error(), "connect") {
+		t.Errorf("Expected error about request or connection, got: %v", err)
 	}
 }
