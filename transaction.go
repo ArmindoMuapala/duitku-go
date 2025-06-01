@@ -144,6 +144,17 @@ type CheckTransactionRequest struct {
 }
 
 // TransactionStatusResponse represents the response from checking a transaction status
+// url: https://docs.duitku.com/api/en/#check-transaction-response-parameters
+// example response:
+//
+//	{
+//	 "merchantOrderId": "abcde12345",
+//	 "reference": "DXXXXCX80TZJ85Q70QCI",
+//	 "amount": "100000",
+//	 "fee":"0.00",
+//	 "statusCode": "00",
+//	 "statusMessage": "SUCCESS"
+//	}
 type TransactionStatusResponse struct {
 	MerchantOrderID string `json:"merchantOrderId"`
 	Reference       string `json:"reference"`
