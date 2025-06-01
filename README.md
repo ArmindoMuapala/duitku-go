@@ -63,6 +63,7 @@ func main() {
 		MerchantCode: "YOUR_MERCHANT_CODE",
 		APIKey:       "YOUR_API_KEY",
 		IsSandbox:    true, // Set to false for production
+		LogEveryRequestAndResponse: true, // Set to false to disable logging every request and response
 	})
 
 	// Get available payment methods
