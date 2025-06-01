@@ -10,16 +10,37 @@ import (
 )
 
 // CallbackData represents the data received in a Duitku callback
+//
+// Parameter descriptions:
+// - merchantCode: Merchant code, sent by the Duitku server to inform which project code is on used. Example: DXXXX
+// - amount: Transaction amount. Example: 150000
+// - merchantOrderId: Transaction number from merchant. Example: abcde12345
+// - productDetail: Description about product/service on transaction. Example: Payment example for example merchant
+// - additionalParam: Additional parameters that you send at the beginning of the transaction request.
+// - paymentCode: Payment method code. Example: VC
+// - resultCode: Result code callback notification. Example: 00 - Success, 01 - Failed
+// - merchantUserId: Customer's username or email on your site. Example: your_customer@example.com
+// - reference: Transaction reference number from Duitku. Please keep it for the purposes of recording or tracking transactions. Example: DXXXXCX80TXXX5Q70QCI
+// - signature: Transaction identification code. Contains transaction parameters which are hashed using the MD5 hashing method. Security parameters as a reference that the request received comes from the Duitku server. Formula: MD5(merchantcode + amount + merchantOrderId + apiKey). Example: 506f88f1000dfb4a6541ff94d9b8d1e6
+// - publisherOrderId: Unique transaction payment number from Duitku. Please keep it for the purposes of recording or tracking transactions. Example: MGUHWKJX3M1KMSQN5
+// - spUserHash: Will be sent to your callback if the payment method using ShopeePay(QRIS, App, and Account Link). If this string parameter contains alphabet and numeric, then it might been paid by Shopee itself. Example: xxxyyyzzz
+// - settlementDate: Settlement date estimation information. Format: YYYY-MM-DD. Example: 2023-07-25
+// - issuerCode: QRIS issuer code information. Example: 93600523
 type CallbackData struct {
-	MerchantCode    string `json:"merchantCode"`
-	Amount          string `json:"amount"`
-	MerchantOrderID string `json:"merchantOrderId"`
-	ProductDetail   string `json:"productDetail"`
-	AdditionalParam string `json:"additionalParam"`
-	PaymentCode     string `json:"paymentCode"`
-	ResultCode      string `json:"resultCode"`
-	Reference       string `json:"reference"`
-	Signature       string `json:"signature"`
+	MerchantCode     string `json:"merchantCode"`
+	Amount           string `json:"amount"`
+	MerchantOrderID  string `json:"merchantOrderId"`
+	ProductDetail    string `json:"productDetail"`
+	AdditionalParam  string `json:"additionalParam"`
+	PaymentCode      string `json:"paymentCode"`
+	ResultCode       string `json:"resultCode"`
+	MerchantUserID   string `json:"merchantUserId"`
+	Reference        string `json:"reference"`
+	Signature        string `json:"signature"`
+	PublisherOrderId string `json:"publisherOrderId"`
+	SpUserHash       string `json:"spUserHash"`
+	SettlementDate   string `json:"settlementDate"`
+	IssuerCode       string `json:"issuerCode"`
 }
 
 // ParseCallback parses the callback data from an HTTP request
@@ -36,8 +57,13 @@ func (c *Client) ParseCallback(r *http.Request) (*CallbackData, error) {
 	additionalParam := r.FormValue("additionalParam")
 	paymentCode := r.FormValue("paymentCode")
 	resultCode := r.FormValue("resultCode")
+	merchantUserID := r.FormValue("merchantUserId")
 	reference := r.FormValue("reference")
 	signature := r.FormValue("signature")
+	publisherOrderId := r.FormValue("publisherOrderId")
+	spUserHash := r.FormValue("spUserHash")
+	settlementDate := r.FormValue("settlementDate")
+	issuerCode := r.FormValue("issuerCode")
 
 	// Validate required fields
 	if merchantCode == "" || amountStr == "" || merchantOrderID == "" || resultCode == "" || signature == "" {
@@ -46,15 +72,20 @@ func (c *Client) ParseCallback(r *http.Request) (*CallbackData, error) {
 
 	// Create callback data
 	callbackData := &CallbackData{
-		MerchantCode:    merchantCode,
-		Amount:          amountStr,
-		MerchantOrderID: merchantOrderID,
-		ProductDetail:   productDetail,
-		AdditionalParam: additionalParam,
-		PaymentCode:     paymentCode,
-		ResultCode:      resultCode,
-		Reference:       reference,
-		Signature:       signature,
+		MerchantCode:     merchantCode,
+		Amount:           amountStr,
+		MerchantOrderID:  merchantOrderID,
+		ProductDetail:    productDetail,
+		AdditionalParam:  additionalParam,
+		PaymentCode:      paymentCode,
+		ResultCode:       resultCode,
+		MerchantUserID:   merchantUserID,
+		Reference:        reference,
+		Signature:        signature,
+		PublisherOrderId: publisherOrderId,
+		SpUserHash:       spUserHash,
+		SettlementDate:   settlementDate,
+		IssuerCode:       issuerCode,
 	}
 
 	// Verify signature
@@ -68,10 +99,10 @@ func (c *Client) ParseCallback(r *http.Request) (*CallbackData, error) {
 // VerifyCallbackSignature verifies the signature of a callback
 func (c *Client) VerifyCallbackSignature(data *CallbackData) bool {
 	// Create signature string
-	signatureStr := fmt.Sprintf("%s%s%s%s", 
-		data.MerchantCode, 
-		data.Amount, 
-		data.MerchantOrderID, 
+	signatureStr := fmt.Sprintf("%s%s%s%s",
+		data.MerchantCode,
+		data.Amount,
+		data.MerchantOrderID,
 		c.config.APIKey,
 	)
 
