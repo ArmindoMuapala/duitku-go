@@ -1,11 +1,13 @@
 package duitku
 
 import (
+	"bytes"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
@@ -308,6 +310,99 @@ func TestDoRequest(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestDoRequestWithLogging(t *testing.T) {
+	// Create a buffer to capture log output
+	logBuffer := &bytes.Buffer{}
+
+	// Create a test server that returns a valid response
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"responseCode":"00","responseMessage":"SUCCESS"}`))
+	}))
+	defer server.Close()
+
+	// Create a client with logging enabled
+	client := &Client{
+		config: Config{
+			MerchantCode: "DXXXX",
+			APIKey:       "DXXXXCX80TZJ85Q70QCI",
+		},
+		baseURL:                    server.URL,
+		httpClient:                 server.Client(),
+		logger:                     log.New(logBuffer, "", 0), // Capture logs
+		logEveryRequestAndResponse: true,                      // Enable logging
+	}
+
+	// Test the request
+	var response struct {
+		ResponseCode    string `json:"responseCode"`
+		ResponseMessage string `json:"responseMessage"`
+	}
+	requestBody := map[string]string{"test": "data"}
+	err := client.doRequest("POST", "test-endpoint", requestBody, &response)
+
+	// Check no error
+	if err != nil {
+		t.Errorf("doRequest() error = %v, want nil", err)
+	}
+
+	// Verify logging occurred
+	logOutput := logBuffer.String()
+	if !strings.Contains(logOutput, "Request method: POST") {
+		t.Errorf("Log output missing request method")
+	}
+	if !strings.Contains(logOutput, "Request url:") {
+		t.Errorf("Log output missing request URL")
+	}
+	if !strings.Contains(logOutput, "Request body:") {
+		t.Errorf("Log output missing request body")
+	}
+	if !strings.Contains(logOutput, "Response status code:") {
+		t.Errorf("Log output missing response status code")
+	}
+	if !strings.Contains(logOutput, "Response body:") {
+		t.Errorf("Log output missing response body")
+	}
+}
+
+func TestDoRequestWithInvalidBody(t *testing.T) {
+	// Create a test server
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`OK`))
+	}))
+	defer server.Close()
+
+	// Create a client
+	client := &Client{
+		config: Config{
+			MerchantCode: "DXXXX",
+			APIKey:       "DXXXXCX80TZJ85Q70QCI",
+		},
+		baseURL:    server.URL,
+		httpClient: server.Client(),
+		logger:     log.New(io.Discard, "", 0),
+	}
+
+	// Create an invalid request body that can't be marshaled to JSON
+	invalidBody := make(chan int) // channels can't be marshaled to JSON
+
+	// Test the request
+	var response struct{}
+	err := client.doRequest("POST", "test-endpoint", invalidBody, &response)
+
+	// Should return an error
+	if err == nil {
+		t.Errorf("doRequest() expected error for invalid body, got nil")
+	}
+
+	// Error should mention marshaling
+	if !strings.Contains(err.Error(), "marshaling") {
+		t.Errorf("Expected error about marshaling, got: %v", err)
 	}
 }
 
