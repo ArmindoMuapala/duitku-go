@@ -2,7 +2,7 @@
 
 [![Go](https://github.com/fatkulnurk/duitku-go/actions/workflows/go.yml/badge.svg)](https://github.com/fatkulnurk/duitku-go/actions/workflows/go.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Go Report Card](https://goreportcard.com/badge/github.com/fatkulnurk/duitku-go)](https://goreportcard.com/report/github.com/fatkulnurk/duitku-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fatkulnurk/duitku-go?time=2025-06-01T09:22:28+07:00)](https://goreportcard.com/report/github.com/fatkulnurk/duitku-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/fatkulnurk/duitku-go.svg)](https://pkg.go.dev/github.com/fatkulnurk/duitku-go)
 
 A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built with only Go's standard library. No external dependencies, making it ideal for minimal and secure payment gateway integrations. This package implements [Duitku API v2](https://docs.duitku.com/api/en/#introduction).
