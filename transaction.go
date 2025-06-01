@@ -180,6 +180,7 @@ type TransactionStatusResponse struct {
 }
 
 // CheckTransaction checks the status of a transaction by merchant order ID
+// URL: https://docs.duitku.com/api/en/#check-transaction-response-parameters
 func (c *Client) CheckTransaction(merchantOrderID string) (*TransactionStatusResponse, error) {
 	// Create signature
 	signature := c.createSignatureMD5(c.config.MerchantCode, merchantOrderID)
