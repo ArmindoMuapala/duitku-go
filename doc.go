@@ -108,6 +108,35 @@ Create a transaction with additional details like customer information and item 
 		},
 	}
 
+# Creating a Subscription Transaction
+
+Create a recurring subscription transaction (only supported for credit card payments):
+
+	isSubscription := true
+	transaction := duitku.TransactionRequest{
+		// Basic transaction details
+		PaymentAmount:   50000,
+		PaymentMethod:   duitku.PaymentMethodCreditCard,
+		MerchantOrderID: "SUB123",
+		ProductDetails:  "Monthly Subscription",
+		CustomerVaName:  "John Doe",
+		Email:           "customer@example.com",
+		CallbackURL:     "https://example.com/callback",
+		ReturnURL:       "https://example.com/return",
+		ExpiryPeriod:    60,
+		
+		// Enable subscription
+		IsSubscription: &isSubscription,
+		
+		// Subscription details
+		SubscriptionDetail: &duitku.SubscriptionDetail{
+			Description:      "Monthly Premium Plan",
+			FrequencyType:    duitku.FrequencyMonthly,
+			FrequencyInterval: 1,
+			TotalNoOfCycles:   12,
+		},
+	}
+
 # Checking Transaction Status
 
 Check the status of a transaction:
@@ -142,45 +171,80 @@ Handle callbacks from Duitku in your HTTP handler:
 
 The package provides constants for all payment methods supported by Duitku:
 
-	duitku.PaymentMethodBCA      // BCA Virtual Account
-	duitku.PaymentMethodMandiri  // Mandiri Virtual Account
-	duitku.PaymentMethodPermata  // Permata Virtual Account
-	duitku.PaymentMethodBNI      // BNI Virtual Account
-	duitku.PaymentMethodBRI      // BRI Virtual Account
-	duitku.PaymentMethodCIMB     // CIMB Niaga Virtual Account
-	duitku.PaymentMethodDanamon  // Danamon Virtual Account
-	duitku.PaymentMethodMaybank  // Maybank Virtual Account
-	duitku.PaymentMethodSahabat  // Sahabat Sampoerna Virtual Account
-	duitku.PaymentMethodBSI      // BSI Virtual Account
-	duitku.PaymentMethodOVO      // OVO
-	duitku.PaymentMethodShopeePay // ShopeePay
-	duitku.PaymentMethodLinkAja  // LinkAja
-	duitku.PaymentMethodDANA     // DANA
-	duitku.PaymentMethodQRIS     // QRIS
-	duitku.PaymentMethodAlfamart // Alfamart
-	duitku.PaymentMethodIndomaret // Indomaret
-	duitku.PaymentMethodCreditCard // Credit Card
-	duitku.PaymentMethodAkulaku  // Akulaku
-	duitku.PaymentMethodKredivo  // Kredivo
-	duitku.PaymentMethodAtome    // Atome
+	// Credit Card
+	duitku.PaymentMethodCreditCard // Credit Card (VC)
+
+	// Virtual Account
+	duitku.PaymentMethodBCA         // BCA Virtual Account (BC)
+	duitku.PaymentMethodMandiri     // Mandiri Virtual Account (M2)
+	duitku.PaymentMethodMaybank     // Maybank Virtual Account (VA)
+	duitku.PaymentMethodBNI         // BNI Virtual Account (I1)
+	duitku.PaymentMethodCIMB        // CIMB Niaga Virtual Account (B1)
+	duitku.PaymentMethodPermata     // Permata Bank Virtual Account (BT)
+	duitku.PaymentMethodATMBersama  // ATM Bersama (A1)
+	duitku.PaymentMethodArthaGraha  // Bank Artha Graha Virtual Account (AG)
+	duitku.PaymentMethodNeoCommerce // Bank Neo Commerce Virtual Account (NC)
+	duitku.PaymentMethodBRI         // Bank BRI Virtual Account (BR)
+	duitku.PaymentMethodSahabat     // Bank Sahabat Sampoerna Virtual Account (S1)
+	duitku.PaymentMethodDanamon     // Danamon Virtual Account (DM)
+	duitku.PaymentMethodBSI         // BSI Virtual Account (BV)
+
+	// Retail Outlets
+	duitku.PaymentMethodAlfamart  // Alfamart/Pegadaian/POS (FT)
+	duitku.PaymentMethodPegadaian // Pegadaian (FT)
+	duitku.PaymentMethodPOS       // POS (FT)
+	duitku.PaymentMethodIndomaret // Indomaret (IR)
+
+	// E-Wallet
+	duitku.PaymentMethodOVO            // OVO (OV)
+	duitku.PaymentMethodShopeePay      // Shopee Pay Apps (SA)
+	duitku.PaymentMethodLinkAjaFixed   // LinkAja Apps Fixed Fee (LF)
+	duitku.PaymentMethodLinkAjaPercent // LinkAja Apps Percentage Fee (LA)
+	duitku.PaymentMethodDANA           // DANA (DA)
+	duitku.PaymentMethodShopeeLink     // Shopee Pay Account Link (SL)
+	duitku.PaymentMethodOVOLink        // OVO Account Link (OL)
+	duitku.PaymentMethodJeniusPay      // Jenius Pay (JP)
+
+	// QRIS
+	duitku.PaymentMethodQrisShopeePay     // QRIS ShopeePay (SP)
+	duitku.PaymentMethodQrisNobu          // QRIS Nobu (QN)
+	duitku.PaymentMethodQrisDana          // QRIS Dana (DQ)
+	duitku.PaymentMethodQrisGudangVoucher // QRIS Gudang Voucher (GQ)
+	duitku.PaymentMethodQrisNusapay       // QRIS Nusapay (SQ)
+
+	// Paylater/Credit
+	duitku.PaymentMethodIndodanaPaylater // Indodana Paylater (ID)
+	duitku.PaymentMethodAtome            // ATOME (AT)
 
 # Transaction Status Codes
 
 The package provides constants for transaction status codes:
 
-	duitku.StatusSuccess    // Success
-	duitku.StatusPending    // Pending
-	duitku.StatusFailed     // Failed
-	duitku.StatusCancelled  // Cancelled
-	duitku.StatusExpired    // Expired
+	duitku.StatusSuccess    // Success (00)
+	duitku.StatusPending    // Pending (01)
+
+# Callback Status Codes
+
+The package provides constants for callback status codes:
+
+	duitku.CallbackStatusSuccess // Success (00)
+	duitku.CallbackStatusFailed  // Failed (01)
+
+# Check Transaction Status Codes
+
+The package provides constants for check transaction status codes:
+
+	duitku.CheckTransactionStatusSuccess   // Success (00)
+	duitku.CheckTransactionStatusPending   // Pending (01)
+	duitku.CheckTransactionStatusCancelled // Cancelled (02)
 
 # Subscription Frequency Types
 
 For credit card subscription transactions, the package provides constants for frequency types:
 
-	duitku.FrequencyDaily   // Daily
-	duitku.FrequencyWeekly  // Weekly
-	duitku.FrequencyMonthly // Monthly
-	duitku.FrequencyYearly  // Yearly
+	duitku.FrequencyDaily   // Daily (1)
+	duitku.FrequencyWeekly  // Weekly (2)
+	duitku.FrequencyMonthly // Monthly (3)
+	duitku.FrequencyYearly  // Yearly (4)
 */
 package duitku

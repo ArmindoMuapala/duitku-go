@@ -5,8 +5,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/fatkulnurk/duitku-go)](https://goreportcard.com/report/github.com/fatkulnurk/duitku-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/fatkulnurk/duitku-go.svg)](https://pkg.go.dev/github.com/fatkulnurk/duitku-go)
 
-> **⚠️ NOTE: This package is currently under development and NOT ready for production use.**
-
 A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built with only Go's standard library. No external dependencies, making it ideal for minimal and secure payment gateway integrations. This package implements [Duitku API v2](https://docs.duitku.com/api/en/#introduction).
 
 ## Table of Contents
@@ -73,7 +71,7 @@ func main() {
 	// Create a transaction
 	transaction := duitku.TransactionRequest{
 		PaymentAmount:   40000,
-		PaymentMethod:   "VC", // Credit Card
+		PaymentMethod:   duitku.PaymentMethodCreditCard, // Credit Card
 		MerchantOrderID: "ORDER123",
 		ProductDetails:  "Test Product",
 		CustomerVaName:  "John Doe",
@@ -157,26 +155,35 @@ func main() {
 
 | Category | Payment Method | Code | Status |
 |----------|---------------|------|--------|
-| **Bank Transfer** | BCA VA | BC | ✅ |
-| | Mandiri VA | M1 | ✅ |
+| **Credit Card** | Credit Card | VC | ✅ |
+| **Virtual Account** | BCA VA | BC | ✅ |
+| | Mandiri VA | M2 | ✅ |
 | | Permata VA | BT | ✅ |
 | | BNI VA | I1 | ✅ |
 | | BRI VA | BR | ✅ |
 | | CIMB Niaga VA | B1 | ✅ |
-| | Danamon VA | DN | ✅ |
+| | Danamon VA | DM | ✅ |
 | | Maybank VA | VA | ✅ |
-| | Sahabat Sampoerna VA | SA | ✅ |
-| | BSI VA | S1 | ✅ |
+| | Sahabat Sampoerna VA | S1 | ✅ |
+| | BSI VA | BV | ✅ |
+| | Bank Neo Commerce VA | NC | ✅ |
+| | Bank Artha Graha VA | AG | ✅ |
 | **E-Wallet** | OVO | OV | ✅ |
-| | ShopeePay | SP | ✅ |
-| | LinkAja | LA | ✅ |
+| | OVO Account Link | OL | ✅ |
+| | ShopeePay Apps | SA | ✅ |
+| | Shopee Account Link | SL | ✅ |
+| | LinkAja (Fixed Fee) | LF | ✅ |
+| | LinkAja (Percentage Fee) | LA | ✅ |
 | | DANA | DA | ✅ |
-| **QRIS** | QRIS | QR | ✅ |
-| **Retail Outlets** | Alfamart | A1 | ✅ |
+| | Jenius Pay | JP | ✅ |
+| **QRIS** | QRIS ShopeePay | SP | ✅ |
+| | QRIS Nobu | QN | ✅ |
+| | QRIS Dana | DQ | ✅ |
+| | QRIS Gudang Voucher | GQ | ✅ |
+| | QRIS Nusapay | SQ | ✅ |
+| **Retail Outlets** | Alfamart/Pegadaian/POS | FT | ✅ |
 | | Indomaret | IR | ✅ |
-| **Credit Card** | Credit Card | VC | ✅ |
-| **Paylater** | Akulaku | AK | ✅ |
-| | Kredivo | K1 | ✅ |
+| **Paylater** | Indodana Paylater | ID | ✅ |
 | | Atome | AT | ✅ |
 
 [🔼 Jump to Table of Contents](#table-of-contents)
@@ -188,7 +195,7 @@ func main() {
 - ✅ **Subscription Support** - [API Reference](https://docs.duitku.com/api/en/#subscription)
   - Create recurring payment schedules
   - Support for daily, weekly, monthly, and yearly billing cycles
-  - Configurable start and end dates
+  - Configurable frequency and interval settings
 
 ```go
 // Create a subscription transaction
@@ -210,10 +217,10 @@ transaction := duitku.TransactionRequest{
     
     // Subscription details
     SubscriptionDetail: &duitku.SubscriptionDetail{
-        Interval:     duitku.SubscriptionFrequencyMonthly,
-        IntervalCount: 1,
-        StartTime:    time.Now().Format("Y-m-d H:i:s"),
-        EndTime:      time.Now().AddDate(1, 0, 0).Format("Y-m-d H:i:s"),
+        Description:     "Monthly Premium Plan",
+        FrequencyType:    duitku.FrequencyMonthly,
+        FrequencyInterval: 1,
+        TotalNoOfCycles:   12,
     },
 }
 ```
