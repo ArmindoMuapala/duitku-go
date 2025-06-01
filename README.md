@@ -9,8 +9,9 @@ A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built wit
 
 ## Table of Contents
 - [🌟 Overview](#-overview)
-- [Installation](#installation)
-- [Usage](#usage)
+- [📋 Requirements](#-requirements)
+- [📦 Installation](#-installation)
+- [📚 Usage](#-usage)
 - [✨ Features](#-features)
   - [Payment Methods 💳](#payment-methods-)
   - [Transactions 🛒](#transactions-)
@@ -19,7 +20,6 @@ A simple and lightweight Duitku.com Payment Gateway SDK for Golang — built wit
   - [Payment Methods Supported 💰](#payment-methods-supported-)
 - [🚀 Advanced Usage](#-advanced-usage)
   - [Subscription Payments](#subscription-payments)
-- [📋 Requirements](#-requirements)
 - [🧪 Example Application](#-example-application)
 - [👥 Contributing](#-contributing)
 - [📄 License](#-license)
@@ -30,7 +30,14 @@ Duitku is a payment gateway service that provides various payment methods for In
 
 [🔼 Jump to Table of Contents](#table-of-contents)
 
-## Installation
+## 📋 Requirements
+
+- Go 1.20 or higher
+- Duitku merchant account and API credentials
+
+[🔼 Jump to Table of Contents](#table-of-contents)
+
+## 📦 Installation
 
 ```bash
 go get github.com/fatkulnurk/duitku-go
@@ -38,7 +45,7 @@ go get github.com/fatkulnurk/duitku-go
 
 [🔼 Jump to Table of Contents](#table-of-contents)
 
-## Usage
+## 📚 Usage
 
 ```go
 package main
@@ -224,13 +231,6 @@ transaction := duitku.TransactionRequest{
     },
 }
 ```
-
-[🔼 Jump to Table of Contents](#table-of-contents)
-
-## 📋 Requirements
-
-- Go 1.20 or higher
-- Duitku merchant account and API credentials
 
 [🔼 Jump to Table of Contents](#table-of-contents)
 
