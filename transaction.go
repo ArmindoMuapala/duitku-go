@@ -8,21 +8,21 @@ import (
 type TransactionRequest struct {
 	// Required fields
 	PaymentAmount   int    `json:"paymentAmount"`
-	PaymentMethod   string `json:"paymentMethod"`
 	MerchantOrderID string `json:"merchantOrderId"`
 	ProductDetails  string `json:"productDetails"`
-	CustomerVaName  string `json:"customerVaName"`
 	Email           string `json:"email"`
-	CallbackURL     string `json:"callbackUrl"`
+	PaymentMethod   string `json:"paymentMethod"`
+	CustomerVaName  string `json:"customerVaName"`
 	ReturnURL       string `json:"returnUrl"`
+	CallbackURL     string `json:"callbackUrl"`
 	ExpiryPeriod    int    `json:"expiryPeriod"`
 
 	// Optional fields
-	PhoneNumber        string              `json:"phoneNumber,omitempty"`
 	AdditionalParam    string              `json:"additionalParam,omitempty"`
 	MerchantUserInfo   string              `json:"merchantUserInfo,omitempty"`
-	CustomerDetail     *CustomerDetail     `json:"customerDetail,omitempty"`
+	PhoneNumber        string              `json:"phoneNumber,omitempty"`
 	ItemDetails        []ItemDetail        `json:"itemDetails,omitempty"`
+	CustomerDetail     *CustomerDetail     `json:"customerDetail,omitempty"`
 	AccountLink        *AccountLink        `json:"accountLink,omitempty"`
 	CreditCardDetail   *CreditCardDetail   `json:"creditCardDetail,omitempty"`
 	IsSubscription     *bool               `json:"isSubscription,omitempty"`
@@ -122,6 +122,7 @@ type TransactionResponse struct {
 }
 
 // CreateTransaction creates a new transaction
+// url: https://docs.duitku.com/api/en/#request-transaction
 func (c *Client) CreateTransaction(request TransactionRequest) (*TransactionResponse, error) {
 	// Create signature
 	signature := c.createSignatureMD5(c.config.MerchantCode, request.MerchantOrderID, fmt.Sprintf("%d", request.PaymentAmount))
